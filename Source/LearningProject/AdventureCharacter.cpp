@@ -16,12 +16,13 @@ void AAdventureCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	check(GEngine != nullptr);
- 
+
 	// Get the player controller for this character
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
 		// Get the enhanced input local player subsystem and add a new input mapping context to it
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<
+			UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(FirstPersonContext, 0);
 		}
@@ -62,7 +63,7 @@ void AAdventureCharacter::Move(const FInputActionValue& value)
 		const FVector Right = GetActorRightVector();
 		AddMovementInput(Right, MovementValue.X);
 
-		const FVector Forward = GetActorUpVector();
+		const FVector Forward = GetActorForwardVector();
 		AddMovementInput(Forward, MovementValue.Y);
 	}
 }
