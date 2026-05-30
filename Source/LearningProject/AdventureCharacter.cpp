@@ -26,6 +26,16 @@ void AAdventureCharacter::Tick(float DeltaTime)
 void AAdventureCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	if (TObjectPtr<UEnhancedInputComponent> EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(
+		PlayerInputComponent))
+	{
+		//バインドムーブアクション
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAdventureCharacter::Move);
+		//バインドジャンプアクション
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+	}
 }
 
 void AAdventureCharacter::Move(const FInputActionValue& value)
