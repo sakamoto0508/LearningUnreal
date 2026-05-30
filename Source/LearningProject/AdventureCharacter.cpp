@@ -8,8 +8,39 @@
 // Sets default values
 AAdventureCharacter::AAdventureCharacter()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Tick()を毎フレーム呼び出す
 	PrimaryActorTick.bCanEverTick = true;
+	// 一人称視点用カメラを生成
+	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	check(FirstPersonCameraComponent != nullptr);
+	// 一人称視点用の腕メッシュを生成
+	FirstPersonMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
+	check(FirstPersonMeshComponent != nullptr);
+	// 腕メッシュをカメラの子にする
+	// カメラが動けば腕も一緒に動く
+	FirstPersonMeshComponent->SetupAttachment(FirstPersonCameraComponent);
+	// このメッシュは一人称視点専用として扱う
+	FirstPersonMeshComponent->FirstPersonPrimitiveType = EFirstPersonPrimitiveType::FirstPerson;
+	// 本体メッシュも一人称視点用設定
+	GetMesh()->FirstPersonPrimitiveType = EFirstPersonPrimitiveType::FirstPerson;
+	// 自分だけに腕メッシュを表示する
+	FirstPersonMeshComponent->SetOnlyOwnerSee(true);
+	// カメラを頭のソケットにアタッチ
+	FirstPersonCameraComponent->SetupAttachment(FirstPersonMeshComponent, FName("head"));
+	// カメラの位置と回転を調整
+	FirstPersonCameraComponent->SetRelativeLocationAndRotation(FirstPersonCameraOffset, FRotator(0.0f, 90.0f, -90.0f));
+	// コントローラーの回転をカメラに反映
+	// AddControllerYawInput() や
+	// AddControllerPitchInput() が効くようになる
+	FirstPersonCameraComponent->bUsePawnControlRotation = true;
+	// 一人称視点専用FOVを有効化
+	FirstPersonCameraComponent->bEnableFirstPersonFieldOfView = true;
+	// 一人称視点専用スケールを有効化
+	FirstPersonCameraComponent->bEnableFirstPersonScale = true;
+	// FOV設定
+	FirstPersonCameraComponent->FirstPersonFieldOfView = FirstPersonFieldOfView;
+	// スケール設定
+	FirstPersonCameraComponent->FirstPersonScale = FirstPersonScale;
 }
 
 // Called when the game starts or when spawned
@@ -78,14 +109,14 @@ void AAdventureCharacter::Look(const FInputActionValue& value)
 	const FVector2D LookAxisValue = value.Get<FVector2D>();
 
 	GEngine->AddOnScreenDebugMessage(
-	   0,
-	   0.0f,
-	   FColor::Green,
-	   FString::Printf(TEXT("X=%f Y=%f"),
-		   LookAxisValue.X,
-		   LookAxisValue.Y)
-   );
-	
+		0,
+		0.0f,
+		FColor::Green,
+		FString::Printf(TEXT("X=%f Y=%f"),
+		                LookAxisValue.X,
+		                LookAxisValue.Y)
+	);
+
 	if (Controller)
 	{
 		AddControllerYawInput(LookAxisValue.X);

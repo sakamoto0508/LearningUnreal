@@ -39,6 +39,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* LookAction;
 
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	UCameraComponent* FirstPersonCameraComponent;
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 	FVector FirstPersonCameraOffset = FVector(2.8f, 6.0f, 0.0f);
 
@@ -46,7 +50,7 @@ protected:
 	float FirstPersonFieldOfView = 70.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
-	float FirstPersonSclae = 0.6f;
+	float FirstPersonScale = 0.6f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
 	USkeletalMeshComponent* FirstPersonMeshComponent;
