@@ -14,6 +14,21 @@ AAdventureCharacter::AAdventureCharacter()
 void AAdventureCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	check(GEngine != nullptr);
+ 
+	// Get the player controller for this character
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		// Get the enhanced input local player subsystem and add a new input mapping context to it
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(FirstPersonContext, 0);
+		}
+	}
+	// Display a debug message for five seconds. 
+	// The -1 "Key" value argument prevents the message from being updated or refreshed.
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("We are using AdventureCharacter."));
 }
 
 // Called every frame
