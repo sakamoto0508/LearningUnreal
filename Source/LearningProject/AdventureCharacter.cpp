@@ -3,6 +3,8 @@
 
 #include "AdventureCharacter.h"
 
+#include <rapidjson/document.h>
+
 // Sets default values
 AAdventureCharacter::AAdventureCharacter()
 {
@@ -51,6 +53,9 @@ void AAdventureCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		//バインドジャンプアクション
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+
+		//バインドルックアクション
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AAdventureCharacter::Look);
 	}
 }
 
@@ -65,5 +70,25 @@ void AAdventureCharacter::Move(const FInputActionValue& value)
 
 		const FVector Forward = GetActorForwardVector();
 		AddMovementInput(Forward, MovementValue.Y);
+	}
+}
+
+void AAdventureCharacter::Look(const FInputActionValue& value)
+{
+	const FVector2D LookAxisValue = value.Get<FVector2D>();
+
+	GEngine->AddOnScreenDebugMessage(
+	   0,
+	   0.0f,
+	   FColor::Green,
+	   FString::Printf(TEXT("X=%f Y=%f"),
+		   LookAxisValue.X,
+		   LookAxisValue.Y)
+   );
+	
+	if (Controller)
+	{
+		AddControllerYawInput(LookAxisValue.X);
+		AddControllerPitchInput(LookAxisValue.Y);
 	}
 }
