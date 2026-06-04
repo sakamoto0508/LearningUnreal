@@ -10,6 +10,7 @@
 #include "InputActionValue.h"
 #include "AdventureCharacter.generated.h"
 
+class UAnimBlueprint;
 class UInputMappingContext;
 class UInputAction;
 class UInputComponent;
@@ -22,6 +23,9 @@ class LEARNINGPROJECT_API AAdventureCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AAdventureCharacter();
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	UAnimBlueprint* FirstPersonDefaultAnim;
 
 protected:
 	// Called when the game starts or when spawned
@@ -39,22 +43,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* LookAction;
 
-	UPROPERTY(VisibleAnywhere, Category = Camera)
-	UCameraComponent* FirstPersonCameraComponent;
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
-	FVector FirstPersonCameraOffset = FVector(2.8f, 6.0f, 0.0f);
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
-	float FirstPersonFieldOfView = 70.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
-	float FirstPersonScale = 0.6f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
-	USkeletalMeshComponent* FirstPersonMeshComponent;
-
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -67,4 +55,19 @@ public:
 
 	UFUNCTION()
 	void Look(const FInputActionValue& value);
+
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	UCameraComponent* FirstPersonCameraComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
+	FVector FirstPersonCameraOffset = FVector(2.8f, 6.0f, 0.0f);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
+	float FirstPersonFieldOfView = 70.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
+	float FirstPersonScale = 0.6f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
+	USkeletalMeshComponent* FirstPersonMeshComponent;
 };
